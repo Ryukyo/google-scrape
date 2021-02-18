@@ -32,9 +32,9 @@ def parse(query, body):
 
     results = []
 
-    for i in range(0, body.max_pages):
+    for i in range(1, body.max_pages):
         # for tryings in range(0, body.get_page_tryings):
-        time.sleep(10)
+        print(i)
         resp = session.get(
             URL, headers=headers, verify=False, timeout=body.timeout,
         )
@@ -51,35 +51,34 @@ def parse(query, body):
         for div in soup.find_all(class_="g"):
             # print(div)
             anchors = div.find(class_="yuRUbf").find_all("a")
-            print(anchors)
+            # print(anchors)
             if anchors:
                 # print("found anchor" + anchors)
                 link = anchors[0]["href"]
-                print(link)
+                # print(link)
                 title = div.find(class_="LC20lb DKV0Md").getText()
-                print(title)
+                # print(title)
                 snippet = (
                     div.find("div", class_="IsZvec")
                     .find("span", class_="aCOpRe")
                     .getText()
                 )
-                print(snippet)
+                # print(snippet)
                 item = {"title": title,
                         "link": link, "snippet": snippet}
                 results.append(item)
 
-        nextLink = soup.find("a", {"id": "pnnext"})
-        print(nextLink)
+        nextLink = soup.find("a", {"aria-label": f"Page {i+1}"})
 
         if nextLink is None:
             print(f"END RESULTS FOR QUERY '{query}'")
             return {"query": query, "results": results}
 
         nextLinkUrl = nextLink["href"]
+        print(nextLinkUrl)
         URL = f"https://www.google.com{nextLinkUrl}"
 
         time.sleep(random.randint(10, 30))
-        break
 
     return {"query": query, "results": results}
 
