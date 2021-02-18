@@ -3,6 +3,7 @@ import functools
 import os
 import random
 import time
+import re
 from multiprocessing import dummy
 
 import requests
@@ -31,6 +32,9 @@ def parse(query, body):
     session = requests.Session()
 
     results = []
+
+    regexMail = re.compile(
+        "([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4})")
 
     for i in range(1, body.max_pages):
         # for tryings in range(0, body.get_page_tryings):
@@ -63,9 +67,10 @@ def parse(query, body):
                     .find("span", class_="aCOpRe")
                     .getText()
                 )
-                # print(snippet)
+                mail = regexMail.findall(snippet)
+                print(mail)
                 item = {"title": title,
-                        "link": link, "snippet": snippet}
+                        "link": link, "snippet": snippet, "mail": mail}
                 results.append(item)
 
         nextLink = soup.find("a", {"aria-label": f"Page {i+1}"})
@@ -97,7 +102,8 @@ def execute_queries(body):
                     f"{len(query['results'])} results"]
             )
             for item in query["results"]:
-                writer.writerow([item["title"], item["link"], item["snippet"]])
+                writer.writerow([item["title"], item["link"],
+                                 item["snippet"], item["mail"]])
 
 
 if not os.path.exists("out"):
