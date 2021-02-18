@@ -59,8 +59,8 @@ def parse(query, body):
                 title = div.find(class_="LC20lb DKV0Md").getText()
                 print(title)
                 snippet = (
-                    div.find(class_="IsZvec")
-                    .find(class_="aCOpRe")
+                    div.find("div", class_="IsZvec")
+                    .find("span", class_="aCOpRe")
                     .getText()
                 )
                 print(snippet)
