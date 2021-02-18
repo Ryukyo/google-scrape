@@ -35,16 +35,15 @@ def parse(query, body):
 
     regexMail = re.compile(
         "([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4})")
+    regexPostal = re.compile("(\d{4}\s[a-zA-Z]+)")
 
     for i in range(1, body.max_pages):
-        # for tryings in range(0, body.get_page_tryings):
         print(i)
         resp = session.get(
             URL, headers=headers, verify=False, timeout=body.timeout,
         )
         if resp.status_code == 429:
             print("response was 429, please wait a few minutes")
-            # time.sleep(int(resp.headers["Retry-After"]))
             time.sleep(60)
             continue
         elif resp.status_code != 200:
@@ -53,24 +52,21 @@ def parse(query, body):
 
         soup = BeautifulSoup(resp.text, "html.parser")
         for div in soup.find_all(class_="g"):
-            # print(div)
             anchors = div.find(class_="yuRUbf").find_all("a")
-            # print(anchors)
             if anchors:
-                # print("found anchor" + anchors)
                 link = anchors[0]["href"]
-                # print(link)
                 title = div.find(class_="LC20lb DKV0Md").getText()
-                # print(title)
                 snippet = (
                     div.find("div", class_="IsZvec")
                     .find("span", class_="aCOpRe")
                     .getText()
                 )
                 mail = regexMail.findall(snippet)
-                print(mail)
+                postal = regexPostal.findall(snippet)
+                print(postal)
+
                 item = {"title": title,
-                        "link": link, "snippet": snippet, "mail": mail}
+                        "link": link, "snippet": snippet, "mail": mail, "postal": postal}
                 results.append(item)
 
         nextLink = soup.find("a", {"aria-label": f"Page {i+1}"})
@@ -103,7 +99,7 @@ def execute_queries(body):
             )
             for item in query["results"]:
                 writer.writerow([item["title"], item["link"],
-                                 item["snippet"], item["mail"]])
+                                 item["snippet"], item["mail"], item["postal"]])
 
 
 if not os.path.exists("out"):
@@ -119,7 +115,6 @@ templates = Jinja2Templates(directory="templates")
 class Body(BaseModel):
     threads: int
     max_pages: int
-    get_page_tryings: int
     results_per_page: int
     language: str
     region: str
