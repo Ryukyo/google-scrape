@@ -39,6 +39,8 @@ def parse(query, body):
     regexPostal = re.compile("(\d{4}\s[a-zA-Z]+)")
     regexPhone = re.compile(
         "([+(\d]{1})(([\d+() -./]){5,16})([+(\d]{1})")
+    regexStreet = re.compile(
+        "([A-ZÖÄÜßéúíóáýèùìòà. -]{1,}[0-9]{0,}[a-zäöüßéúíóáýèùìòà. -]{1,}) ([0-9 ]{1,}[-+/\\a-z0-9 ]{0,})")
 
     for i in range(1, body.max_pages):
         resp = session.get(
@@ -66,13 +68,14 @@ def parse(query, body):
                 mail = regexMail.findall(snippet)
                 postal = regexPostal.findall(snippet)
                 phone = regexPhone.findall(snippet)
+                street = regexStreet.findall(snippet, re.IGNORECASE)
+
                 item = {"title": title,
-                        "link": link, "snippet": snippet, "mail": mail, "postal": postal, "phone": phone}
+                        "link": link, "snippet": snippet, "mail": mail, "street": street, "postal": postal, "phone": phone}
                 if item["link"] not in seen:
                     seen.add(item["link"])
                     results.append(item)
 
-        # print(results)
         nextLink = soup.find("a", {"aria-label": f"Page {i+1}"})
 
         if nextLink is None:
@@ -103,7 +106,7 @@ def execute_queries(body):
             )
             for item in query["results"]:
                 writer.writerow([item["title"], item["link"],
-                                 item["snippet"], item["mail"], item["postal"], item["phone"]])
+                                 item["snippet"], item["mail"], item["street"], item["postal"], item["phone"]])
 
 
 if not os.path.exists("out"):
