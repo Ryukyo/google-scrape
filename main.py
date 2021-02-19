@@ -37,7 +37,8 @@ def parse(query, body):
     regexMail = re.compile(
         "([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4})")
     regexPostal = re.compile("(\d{4}\s[a-zA-Z]+)")
-    regexPhone = re.compile("\+*(\+? |-|\.)*(\(\d\))* ?\d+( |/)*")
+    regexPhone = re.compile(
+        "([+(\d]{1})(([\d+() -./]){5,16})([+(\d]{1})")
 
     for i in range(1, body.max_pages):
         resp = session.get(
@@ -64,8 +65,7 @@ def parse(query, body):
                 )
                 mail = regexMail.findall(snippet)
                 postal = regexPostal.findall(snippet)
-                phone = "PH"
-                # regexPhone.findall(snippet)
+                phone = regexPhone.findall(snippet)
                 item = {"title": title,
                         "link": link, "snippet": snippet, "mail": mail, "postal": postal, "phone": phone}
                 if item["link"] not in seen:
