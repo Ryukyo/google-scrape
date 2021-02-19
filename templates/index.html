@@ -25,13 +25,6 @@
                 </div>
                 <div class="row" style="text-align: left;">
                     <div class="col-sm-6 form-group">
-                        <h5 style="text-align: left">Get Page trying:</h5>
-                        <input class="form-control" id="get_page_tryings" type="number" min="0" max="100"
-                            name="get_page_tryings" value="3">
-                    </div>
-                </div>
-                <div class="row" style="text-align: left;">
-                    <div class="col-sm-6 form-group">
                         <h5 style="text-align: left">Result per page:</h5>
 
                         <input class="form-control" id="results_per_page" type="number" min="0" name="results_per_page"
@@ -109,7 +102,6 @@
                 data: JSON.stringify({
                     threads: $("#threads").val(),
                     max_pages: $("#max_pages").val(),
-                    get_page_tryings: $("#get_page_tryings").val(),
                     results_per_page: $("#results_per_page").val(),
                     language: $("#language").val(),
                     region: $("#region").val(),
