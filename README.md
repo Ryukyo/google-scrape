@@ -1,12 +1,14 @@
 # google-scrape
 
-Scrape Google search results into CSV file
+Scrape Google search results into CSV file or scrape data directly from websites
 
 ## Setup
 
 1. `virtualenv -p python3.8 venv`
 2. `source vebv/bin/activate`
 3. `pip install -r requirements.txt`
+
+For scripts using Selenium, a version of Chromedriver matching your Chrome Browser version is required
 
 ## Run
 
