@@ -1,6 +1,7 @@
 # google-scrape
 
-Scrape Google search results into CSV file or scrape data directly from websites
+Scrape Google search results into CSV file (using the main.py file)\
+Or scrape data directly from websites (all other python scripts)
 
 ## Setup
 
@@ -12,7 +13,13 @@ For scripts using Selenium, a version of Chromedriver matching your Chrome Brows
 
 ## Run
 
+### Using beautiful soup and the main.py file for Google results
+
 1. Enter search terms in queries.txt
 2. Run `python3 main.py`
 
 Go to `http://127.0.0.1:8000` in browser
+
+### Using Selenium on other websites
+
+1. Run `python3 'name_of_script'.py`
