@@ -10,6 +10,7 @@ import csv
 s = Service('./chromedriver')
 options = Options()
 options.headless = True
+main_url = "https://restaurant.ikyu.com/"
 # without headless option if detected as bot , options=options
 browser = webdriver.Chrome(service=s)
 
@@ -22,9 +23,9 @@ stations = []
 phones = []
 
 # 194 + 1
-for iteration in range(1, 2):
+for iteration in range(1, 13):
     url_counting = (
-        f"https://12345678.com/area/tokyo/?pups=2&xpge={iteration}")
+        f"https://restaurant.ikyu.com/area/hyogo/t-scene2859/?pups=2&xpge={iteration}&rac1=07003&pndt=1&ptaround=0&xsrt=gourmet&t-scene=2859")
 
     browser.get(url_counting)
     restaurant_elements = browser.find_elements(By.CLASS_NAME,
@@ -35,7 +36,6 @@ for iteration in range(1, 2):
         if url != None:
             urls.append(url)
 
-# print(len(urls))
 for restaurant in urls:
     name = price = genre = address = phone = station = ''
     browser.get(restaurant)
@@ -43,8 +43,8 @@ for restaurant in urls:
     try:
         name = browser.find_element(By.CLASS_NAME,
                                     "restaurantName_dvSu5").get_attribute('innerText')
-        price_exists = browser.find_elements(By.CLASS_NAME,
-                                             "priceLabel_p2imo")
+        price_exists = browser.find_elements(By.XPATH,
+                                             "//*[@aria-label='05']/span[2]")
         if(price_exists):
             price = browser.find_element(By.XPATH,
                                          "//*[@aria-label='05']/span[2]").get_attribute('innerText')
@@ -89,12 +89,12 @@ for restaurant in urls:
 combined_lists = [list(a) for a in zip(
     names, urls, prices, genres, addresses, phones, stations)]
 
-browser.quit()
-
-with open('out/restaurants_tokyo.csv', 'w', newline='') as csvfile:
+with open('out/restaurants_hyogo_birthday.csv', 'w', newline='') as csvfile:
     my_writer = csv.writer(csvfile, delimiter=',')
     headers = ['Venue Name', 'Venue URL', 'Price Range',
                'Genre', 'Address', 'Phone Number', 'Nearest Station']
     my_writer.writerow(i for i in headers)
     for j in combined_lists:
         my_writer.writerow(j)
+
+browser.quit()
