@@ -8,11 +8,11 @@ import time
 import csv
 
 s = Service('./chromedriver')
-options = Options()
-options.headless = True
+o = Options()
+o.headless = True
 main_url = "https://restaurant.ikyu.com/"
 # without headless option if detected as bot , options=options
-browser = webdriver.Chrome(service=s)
+browser = webdriver.Chrome(service=s, options=o)
 
 urls = []
 names = []
@@ -23,9 +23,9 @@ stations = []
 phones = []
 
 # 194 + 1
-for iteration in range(1, 13):
+for iteration in range(1, 104):
     url_counting = (
-        f"https://restaurant.ikyu.com/area/hyogo/t-scene2859/?pups=2&xpge={iteration}&rac1=07003&pndt=1&ptaround=0&xsrt=gourmet&t-scene=2859")
+        f"https://restaurant.ikyu.com/area/tokyo/t-scene369/?pups=2&xpge={iteration}&rac1=03001&pndt=1&ptaround=0&xsrt=gourmet&t-scene=369")
 
     browser.get(url_counting)
     restaurant_elements = browser.find_elements(By.CLASS_NAME,
@@ -39,10 +39,13 @@ for iteration in range(1, 13):
 for restaurant in urls:
     name = price = genre = address = phone = station = ''
     browser.get(restaurant)
-    time.sleep(2)
+    time.sleep(1)
     try:
-        name = browser.find_element(By.CLASS_NAME,
-                                    "restaurantName_dvSu5").get_attribute('innerText')
+        name_exists = browser.find_elements(By.CLASS_NAME,
+                                            "restaurantName_dvSu5")
+        if (name_exists):
+            name = browser.find_element(By.CLASS_NAME,
+                                        "restaurantName_dvSu5").get_attribute('innerText')
         price_exists = browser.find_elements(By.XPATH,
                                              "//*[@aria-label='05']/span[2]")
         if(price_exists):
@@ -76,7 +79,7 @@ for restaurant in urls:
                     '\u3000', ' ').replace('\n', ' ')
     except NoSuchElementException as e:
         print("Exception:", e)
-        # continue
+        continue
     finally:
         names.append(name)
         prices.append(price)
@@ -89,7 +92,7 @@ for restaurant in urls:
 combined_lists = [list(a) for a in zip(
     names, urls, prices, genres, addresses, phones, stations)]
 
-with open('out/restaurants_hyogo_birthday.csv', 'w', newline='') as csvfile:
+with open('out/restaurants_tokyo_anniversary.csv', 'w', newline='') as csvfile:
     my_writer = csv.writer(csvfile, delimiter=',')
     headers = ['Venue Name', 'Venue URL', 'Price Range',
                'Genre', 'Address', 'Phone Number', 'Nearest Station']
