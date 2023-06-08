@@ -5,7 +5,7 @@ Or scrape data directly from websites (all other python scripts)
 
 ## Setup
 
-1. `virtualenv -p python3.8 venv`
+1. `virtualenv -p python3.10 venv`
 2. `source venv/bin/activate`
 3. `pip install -r requirements.txt`
 
