@@ -59,12 +59,15 @@ def parse(query, body):
             anchors = div.find(class_="yuRUbf").find_all("a")
             if anchors:
                 link = anchors[0]["href"]
-                title = div.find(class_="LC20lb DKV0Md").getText()
-                snippet = (
+                title_element = div.find(class_="LC20lb DKV0Md")
+                title = title_element.get_text() if title_element else "No Description"
+                snippet_element = (
                     div.find("div", class_="IsZvec")
-                    .find("span", class_="aCOpRe")
-                    .getText()
                 )
+                snippet_subelement = snippet_element.find(
+                    "span", class_="aCOpRe") if snippet_element else None
+                snippet = snippet_subelement.get_text() if snippet_subelement else "No Description"
+
                 mail = regexMail.findall(snippet)
                 postal = regexPostal.findall(snippet)
                 phone = regexPhone.findall(snippet)
