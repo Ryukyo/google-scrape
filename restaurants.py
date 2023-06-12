@@ -11,7 +11,7 @@ s = Service('./chromedriver')
 o = Options()
 o.headless = True
 main_url = "https://restaurant.ikyu.com/"
-# without headless option if detected as bot , options=options
+# without headless option if detected as bot , options=o
 browser = webdriver.Chrome(service=s, options=o)
 
 urls = []
@@ -23,9 +23,9 @@ stations = []
 phones = []
 
 # 194 + 1
-for iteration in range(1, 104):
+for iteration in range(1, 3):
     url_counting = (
-        f"https://restaurant.ikyu.com/area/tokyo/t-scene369/?pups=2&xpge={iteration}&rac1=03001&pndt=1&ptaround=0&xsrt=gourmet&t-scene=369")
+        f"https://restaurant.ikyu.com/search?pups=2&pthm=19%3A00&xpge={iteration}&rac1=08004&pndt=1&ptaround=0&xsrt=gourmet")
 
     browser.get(url_counting)
     restaurant_elements = browser.find_elements(By.CLASS_NAME,
@@ -92,7 +92,7 @@ for restaurant in urls:
 combined_lists = [list(a) for a in zip(
     names, urls, prices, genres, addresses, phones, stations)]
 
-with open('out/restaurants_tokyo_anniversary.csv', 'w', newline='') as csvfile:
+with open('out/restaurants_hiroshima_rankings_01-23.csv', 'w', newline='') as csvfile:
     my_writer = csv.writer(csvfile, delimiter=',')
     headers = ['Venue Name', 'Venue URL', 'Price Range',
                'Genre', 'Address', 'Phone Number', 'Nearest Station']

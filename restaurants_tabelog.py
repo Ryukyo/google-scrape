@@ -12,7 +12,7 @@ options = Options()
 options.headless = True
 main_url = "https://tabelog.com/"
 # without headless option if detected as bot , options=options
-browser = webdriver.Chrome(service=s)
+browser = webdriver.Chrome(service=s, options=options)
 
 urls = []
 names = []
@@ -23,9 +23,9 @@ stations = []
 phones = []
 
 # 194 + 1
-for iteration in range(1, 4):
+for iteration in range(1, 53):
     url_counting = (
-        f"https://tabelog.com/keywords/%E9%A3%9F%E3%81%84%E5%88%9D%E3%82%81%E8%86%B3/osaka/kwdLst/RC/{iteration}/?srchTg=1")
+        f"https://tabelog.com/saitama/rstLst/{iteration}/?LstSmoking=0&svd=20230104&svt=1900&svps=2&LstCos=5&RdoCosTp=2")
 
     browser.get(url_counting)
     restaurant_elements = browser.find_elements(By.XPATH,
@@ -77,7 +77,7 @@ for restaurant in urls:
 combined_lists = [list(a) for a in zip(
     names, urls, prices, genres, addresses, phones, stations)]
 
-with open('out/tabelog/restaurants_osaka_kuizome.csv', 'w', newline='') as csvfile:
+with open('out/tabelog/restaurants_saitama_01-23.csv', 'w', newline='') as csvfile:
     my_writer = csv.writer(csvfile, delimiter=',')
     headers = ['Venue Name', 'Venue URL', 'Price Range',
                'Genre', 'Address', 'Phone Number', 'Nearest Station']
